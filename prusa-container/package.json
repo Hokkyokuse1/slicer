@@ -1,0 +1,11 @@
+{
+  "name": "slicer-service",
+  "version": "1.0.0",
+  "description": "HTTP API for Slic3r",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.0"
+  }
+}

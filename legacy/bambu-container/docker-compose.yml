@@ -1,0 +1,16 @@
+  slicer:
+    image: lscr.io/linuxserver/bambustudio:latest
+    container_name: slicer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/uploads:/uploads  # Ensure proper data sharing
+      - ./bambu-container/config:/config  # Store BambuStudio settings persistently
+    environment:
+      - PUID=1000  # Change to match your user ID
+      - PGID=1000  # Change to match your group ID
+      - UMASK=022
+      - DISPLAY=:99  # Ensures no GUI conflict
+    stdin_open: true
+    tty: true

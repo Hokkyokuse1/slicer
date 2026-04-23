@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./frontend/quote
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/quote:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    container_name: backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./backend/uploads:/app/uploads  # Frontend uploads directory
+      - ./backend/output:/output        # Changed to match slicer's output path
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - slicer
+
+  slicer:
+    build: ./prusa-container
+    container_name: slicer
+    restart: unless-stopped
+    volumes:
+      - ./backend/uploads:/input        # Shared upload directory
+      - ./backend/output:/output        # Direct output mapping (no app prefix)
+      # Removed prusa-container mount to prevent overwriting build files
+    entrypoint: ["/slicer/watch_slicer.sh"]

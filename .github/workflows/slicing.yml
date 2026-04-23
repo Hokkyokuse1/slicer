@@ -1,0 +1,28 @@
+name: Slice STL File
+
+on:
+  workflow_dispatch:
+    inputs:
+      filename:
+        description: "STL File to Slice"
+        required: true
+
+jobs:
+  slice:
+    runs-on: ubuntu-latest
+    container: keyglitch/docker-slic3r-prusa3d:1.41.3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download STL File
+        run: curl -o model.stl "https://your-backend.com/uploads/${{ github.event.inputs.filename }}"
+
+      - name: Slice STL to G-code
+        run: slic3r --export-gcode model.stl -o output.gcode
+
+      - name: Upload G-code artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sliced-gcode
+          path: output.gcode
